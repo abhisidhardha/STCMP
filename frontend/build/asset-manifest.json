@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f5ad236f.css",
+    "main.js": "/static/js/main.d234b94d.js",
+    "static/js/453.8ab44547.chunk.js": "/static/js/453.8ab44547.chunk.js",
+    "static/media/vnr.png": "/static/media/vnr.65b694b1c3c82d86123d.png",
+    "static/media/vnrlogo.png": "/static/media/vnrlogo.854092c5ff46d70cd060.png",
+    "index.html": "/index.html",
+    "main.f5ad236f.css.map": "/static/css/main.f5ad236f.css.map",
+    "main.d234b94d.js.map": "/static/js/main.d234b94d.js.map",
+    "453.8ab44547.chunk.js.map": "/static/js/453.8ab44547.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f5ad236f.css",
+    "static/js/main.d234b94d.js"
+  ]
+}

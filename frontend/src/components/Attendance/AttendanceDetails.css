@@ -1,0 +1,55 @@
+.attendancedet{
+    height: 100%;
+    width: 100%;
+    padding:30px;
+}
+.attendancedet .navcon{
+    margin: auto;
+}
+.attendancedet .row{
+    width: 100%;
+    padding: 10px;
+}
+
+.attendancedet .navcon .btn {
+    background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 5px #000000;
+    border-radius: 10px;
+    display: block;
+    margin: auto;
+  }
+.attendancedet .navcon .btn:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+.attendancedet .atd{
+    padding: 50px;
+}
+.atd .col{
+    background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
+    margin: 10px;
+    border-radius: 10px;
+    color: aliceblue;
+    transition: 0.2s ease-in-out;
+    background-size: 200% auto;
+    display: block;
+    box-shadow: 0 0 1px #000000;
+}
+.atd .col:hover{
+    background-position: right center;
+    color: #fff;
+    text-decoration: none;
+}
+.atd h1{
+    padding: 20px;
+}
+.attendancedet .cbp{
+    width: 200px;
+    height: 200px;
+}
