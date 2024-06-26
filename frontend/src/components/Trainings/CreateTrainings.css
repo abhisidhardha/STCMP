@@ -3,11 +3,8 @@
     border-radius: 15px;
     padding: 10px;
     color: black;
-    height: 75%;
     max-width: 90%;
-    display: block;
-    margin: 10px;
-    margin: auto;
+    margin: 20px auto;
     box-sizing: border-box;
     overflow-y: auto;
     overflow-x: hidden;
@@ -17,9 +14,6 @@
 }
 .create-training .form-control {
     width: 100%;
-}
-.create-training .ext{
-    
 }
 .errorMsg{
     color: #ff5d5d;

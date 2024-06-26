@@ -51,7 +51,8 @@ function App() {
         {
           path:'updateattendance/:id',
           element:<UpdateAttendance/>
-        },{
+        },
+        {
           path:'inspection',
           element:<AuditInspection/>
         },

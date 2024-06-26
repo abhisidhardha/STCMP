@@ -23,16 +23,13 @@ function Login() {
   function onSignUpFormSubmit(userCred) {
     dispatch(userLoginThunk(userCred));
   }
+
   useEffect(() => {
     if (loginUserStatus) {
       navigate("/home");
     }
-  }, [loginUserStatus]);
-  useEffect(() => {
-    if (errorOccurred) {
-      setErrorMessage(errMsg);
-    }
-  }, [errorOccurred, errMsg]);
+  }, [loginUserStatus, navigate]);
+
   return (
     <div className="d-flex vh-100 justify-content-center align-items-center">
       <video autoPlay muted loop id="background-video">
@@ -47,7 +44,7 @@ function Login() {
           className="p-3 d-flex justify-content-center align-items-center flex-column"
           onSubmit={handleSubmit(onSignUpFormSubmit)}
         >
-          <h1 className="text-center mb-3 ">Login</h1>
+          <h1 className="text-center mb-3">Login</h1>
           <img src={PersonIcon} className="icon mb-3" alt="Person Icon" />
           <input
             type="text"
@@ -55,7 +52,7 @@ function Login() {
             placeholder="Username"
             {...register("userId", { required: true })}
           />
-          {errors.userName?.type==='required' && (
+          {errors.userId?.type === "required" && (
             <p className="text-danger">*Username is required</p>
           )}
           <input
@@ -64,12 +61,11 @@ function Login() {
             placeholder="Password"
             {...register("password", { required: true })}
           />
-          {errors.password?.type==='required' && (
+          {errors.password?.type === "required" && (
             <p className="text-danger">*Password is required</p>
           )}
           <input type="submit" className="btn btn-success" value="Submit" />
         </form>
-        {errorMessage && <p className="text-danger">{errorMessage}</p>}
       </div>
     </div>
   );

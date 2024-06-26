@@ -84,19 +84,25 @@ function Trainings() {
     return (
         <div className='p-3 trainings-tab'>
             <nav className='row'>
-            <div className='col-lg-6 col-sm-6 col-md-3 mb-1'>
-                    <h1 className='px-3 d-inline'>Trainings</h1>
-                            <input type="checkbox" id="showOngoingTrainings" checked={showOngoingTrainings} onChange={() => setShowOngoingTrainings(!showOngoingTrainings)}/>
-                            <label htmlFor="showOngoingTrainings" className="toggle"></label>
-                            <label htmlFor="showOngoingTrainings" className='px-2'>Show Ongoing</label>
+            <div className='col-lg-6 col-sm-6 col-md-6  d-flex justify-content-between'>
+                    <h1 className='px-3 d-inline'>Trainings</h1> 
+                    <div className='d-inline d-flex align-items-center w-100'>
+                        <input type="checkbox" id="showOngoingTrainings" checked={showOngoingTrainings} onChange={() => setShowOngoingTrainings(!showOngoingTrainings)}/>
+                        <label htmlFor="showOngoingTrainings" className="toggle"></label>
+                        <label htmlFor="showOngoingTrainings" className='px-2'>Show Ongoing</label>
+                    </div>
                 </div>
-                <div className='col text-end col-lg-6 col-sm-6 col-md-3 row'>
-                    <button className="btn btn-success mb-1 col" onClick={() => navigate("/home/createtraining")} >
-                        Add Training
-                    </button>
-                    <button className="btn btn-primary ms-2 col" onClick={exportToExcel}>
-                        Export to Excel
-                    </button>
+                <div className='text-end col-lg-6 col-sm-6 d-flex justify-content-between col-md-6'>
+                        <div className='col-6 p-2'>
+                            <button className="btn btn-success w-100" onClick={() => navigate("/home/createtraining")} >
+                                Add Training
+                            </button>
+                        </div>
+                        <div className='col-6 p-2'>
+                            <button className="btn btn-primary w-100" onClick={exportToExcel}>
+                                Export to Excel
+                            </button>
+                        </div>
                 </div>
             </nav>
             <div className="trainings-container">

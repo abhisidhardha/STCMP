@@ -73,8 +73,8 @@ function CreateTrainings() {
             studentYear: parseInt(data.studentYear),
             semester: parseInt(data.semester),
             totalStudents: parseInt(data.totalStudents),
-            noOfHours: data.noOfHours ? parseInt(data.noOfHours) : undefined,
-            duration: data.duration ? parseInt(data.duration) : undefined,
+            noOfHours: data.noOfHours ? parseInt(data.noOfHours) : null,
+            duration: data.duration ? parseInt(data.duration) : null,
             programCoordinator: selectedPC.map(pc => pc.value),
             studentsData: formData.studentsData.map(student => ({
                 ...student,
@@ -82,10 +82,9 @@ function CreateTrainings() {
                 attendanceRecords: []
             }))
         };
-
+    
         try {
             const response = await axios.post('http://localhost:5000/trainings-api/create', transformedData);
-
             setResponseMessage(response.data.message);
             navigate("/home/trainings");
         } catch (error) {
@@ -96,6 +95,7 @@ function CreateTrainings() {
             }
         }
     };
+    
 
     return (
         <div className="create-training container">

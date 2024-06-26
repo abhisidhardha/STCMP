@@ -53,7 +53,7 @@ facultyApp.post(
       const signedToken = jwt.sign(
         { userId: dbUser.userId },
         process.env.SECRET_KEY,
-        { expiresIn: "1h" }
+        { expiresIn: "10m" }
       );
       res.send({
         message: "Login success",
