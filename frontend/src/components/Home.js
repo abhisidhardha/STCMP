@@ -63,7 +63,7 @@ function Home() {
       {isSmallScreen && isSidebarModalOpen && <div className="sidebar-modal-backdrop" onClick={() => setIsSidebarModalOpen(false)}></div>}
       <div
         ref={sidebarModalRef}
-        className={`sidebar d-flex flex-column ${isSmallScreen ? 'sidebar-modal' : ''} ${isSidebarModalOpen || !isSmallScreen ? 'd-block' : 'd-none'} ${isSidebarCollapsed && !isSmallScreen ? 'collapsed' : ''}`}
+        className={`sidebar d-flex flex-column ${isSmallScreen ? 'sidebar-modal' : ''} ${isSidebarModalOpen || !isSmallScreen ? 'd-block' : 'd-none'} ${isSidebarCollapsed && !isSmallScreen ? 'collapsed' : 'expanded'}`}
       >
       <div className='header'>
         <img src={Logo} className='vnr-logo' alt="Logo" />

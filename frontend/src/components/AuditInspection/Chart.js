@@ -3,7 +3,8 @@ import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 import Select from 'react-select';
-import "./Chart.css"
+import "./Chart.css";
+
 const Chart = () => {
     const [trainings, setTrainings] = useState([]);
     const [chartData, setChartData] = useState(null);
@@ -35,7 +36,7 @@ const Chart = () => {
         if (selectedTraining) {
             prepareSingleChartData(selectedTraining);
         }
-    }, [selectedTraining, startYear, endYear, trainings]);
+    }, [selectedTraining]);
 
     const prepareChartData = (trainings) => {
         const filteredTrainings = trainings.filter(training => {
@@ -55,7 +56,7 @@ const Chart = () => {
             yearData[startYear][trainingName] = (yearData[startYear][trainingName] || 0) + totalStudents;
         });
 
-        const labels = Object.keys(yearData);
+        const labels = Object.keys(yearData).sort();
         const trainingNames = [...new Set(filteredTrainings.map(t => t.trainingName))];
         const datasets = trainingNames.map(trainingName => ({
             label: trainingName,
@@ -71,8 +72,7 @@ const Chart = () => {
 
     const prepareSingleChartData = (trainingName) => {
         const filteredTrainings = trainings.filter(training => {
-            const year = training.startYear;
-            return training.trainingName === trainingName && (!startYear || year >= startYear) && (!endYear || year <= endYear);
+            return training.trainingName === trainingName;
         });
 
         const yearData = {};
@@ -87,7 +87,7 @@ const Chart = () => {
             yearData[startYear] += totalStudents;
         });
 
-        const labels = Object.keys(yearData);
+        const labels = Object.keys(yearData).sort();
         const data = labels.map(year => yearData[year]);
 
         setSingleChartData({
@@ -168,7 +168,7 @@ const Chart = () => {
             />
             <h2 className='text-dark'>Single Training Summary</h2>
             <Select 
-            className='text-dark'
+                className='text-dark'
                 options={trainingOptions} 
                 onChange={(option) => setSelectedTraining(option.value)} 
                 placeholder="Select a training"

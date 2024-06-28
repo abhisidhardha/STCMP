@@ -14,10 +14,12 @@ function AuditInspection() {
     endYear: "",
     studentYear: "",
     semester: "",
-    status: "",
+    totalStudents:"",
+    venue:"",
     noOfHours: "",
     duration: "",
     mode: "",
+    status: "",
     trainerName: "",
     designation: "",
     company: "",
@@ -31,10 +33,12 @@ function AuditInspection() {
     endYear: false,
     studentYear: false,
     semester: false,
-    status: false,
+    totalStudents:false,
+    venue:false,
     noOfHours: false,
     duration: false,
     mode: false,
+    status: false,
     trainerName: false,
     designation: false,
     company: false,
@@ -156,10 +160,12 @@ function AuditInspection() {
           "End Year",
           "Student Year",
           "Semester",
-          "Status",
+          "Total Students",
+          "Venue",
           "No of Hours",
           "Duration",
           "Mode",
+          "Status",
           "Trainer Name",
           "Designation",
           "Company",
@@ -172,10 +178,12 @@ function AuditInspection() {
           endYear,
           studentYear,
           semester,
-          status,
+          totalStudents,
+          venue,
           noOfHours,
           duration,
           mode,
+          status,
           trainerName,
           designation,
           company,
@@ -186,10 +194,12 @@ function AuditInspection() {
             endYear,
             studentYear,
             semester,
-            status,
+            totalStudents,
+            venue,
             noOfHours,
             duration,
             mode,
+            status,
             trainerName,
             designation,
             company,
@@ -244,11 +254,12 @@ function AuditInspection() {
               { label: "End Year", column: "endYear" },
               { label: "Student Year", column: "studentYear" },
               { label: "Semester", column: "semester" },
-              { label: "Status", column: "status" },
               { label: "Total No of Students", column: "totalStudents" },
+              { label: "Venue", column: "venue" },
               { label: "No of Hours", column: "noOfHours" },
               { label: "Duration (hours)", column: "duration" },
               { label: "Mode", column: "mode" },
+              { label: "Status", column: "status" },
               { label: "Trainer Name", column: "trainerName" },
               { label: "Designation", column: "designation" },
               { label: "Company", column: "company" },
@@ -301,10 +312,12 @@ function AuditInspection() {
               <td>{training.endYear}</td>
               <td>{training.studentYear}</td>
               <td>{training.semester}</td>
-              <td>{training.status}</td>
+              <td>{training.totalStudents}</td>
+              <td>{training.venue}</td>
               <td>{training.noOfHours}</td>
               <td>{training.duration}</td>
               <td>{training.mode}</td>
+              <td>{training.status}</td>
               <td>{training.trainerName}</td>
               <td>{training.designation}</td>
               <td>{training.company}</td>

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import "./Login.css";
-import PersonIcon from "../images/person-icon.png";
-import Building from "../images/vnr.png";
 import { useSelector, useDispatch } from "react-redux";
 import { userLoginThunk } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import "./Login.css";
+import PersonIcon from "../images/person-icon.png";
 
 function Login() {
   const {
@@ -15,10 +13,10 @@ function Login() {
     formState: { errors },
   } = useForm();
   const [errorMessage, setErrorMessage] = useState("");
-  let { isPending, currentUser, loginUserStatus, errorOccurred, errMsg } =
+  const { isPending, currentUser, loginUserStatus, errorOccurred, errMsg } =
     useSelector((state) => state.userLoginReducer);
-  let dispatch = useDispatch();
-  let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function onSignUpFormSubmit(userCred) {
     dispatch(userLoginThunk(userCred));
@@ -29,6 +27,12 @@ function Login() {
       navigate("/home");
     }
   }, [loginUserStatus, navigate]);
+
+  useEffect(() => {
+    if (errorOccurred) {
+      setErrorMessage(errMsg);
+    }
+  }, [errorOccurred, errMsg]);
 
   return (
     <div className="d-flex vh-100 justify-content-center align-items-center">
@@ -63,6 +67,9 @@ function Login() {
           />
           {errors.password?.type === "required" && (
             <p className="text-danger">*Password is required</p>
+          )}
+          {errorOccurred && (
+            <p className="text-danger">{errorMessage}</p>
           )}
           <input type="submit" className="btn btn-success" value="Submit" />
         </form>
