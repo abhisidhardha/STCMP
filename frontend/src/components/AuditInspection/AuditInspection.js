@@ -319,7 +319,7 @@ function AuditInspection() {
           />
         )}
       </div>
-      <table className="table rounded rounded-3">
+      <table className="table table-bordered table-responsive table-hover table-striped">
         <thead>
           <tr>
             {[

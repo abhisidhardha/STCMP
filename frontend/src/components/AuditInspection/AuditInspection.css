@@ -1,24 +1,38 @@
 .audit-inspection {
     padding: 10px;
     color: black;
-    margin: 0px 20px ;
+    margin: 0px 20px;
 }
-.audit-inspection th,td {
-    border: 0.2px rgb(151, 151, 151) solid  ;
-    padding: 25px ;
+
+.audit-inspection table {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 8px; /* Rounded corners for the table */
+    border: none; /* No visible border */
+    box-shadow: 0 0 0 1px rgb(14, 14, 14); /* Simulate border with shadow */
 }
-.audit-inspection th{
+
+.audit-inspection th, .audit-inspection td {
+    padding: 10px 25px; /* Adjust padding as needed */
+}
+
+.audit-inspection th {
     background-color: rgb(121, 217, 255);
 }
-.audit-inspection tr:hover{
+
+.audit-inspection tr:hover {
     background-color: rgb(139, 255, 255);
 }
-.audit-inspection .basic-multi-select{
+
+.audit-inspection .basic-multi-select {
     max-width: 300px;
 }
-.audit-inspection  .table{
+
+.audit-inspection .table {
     text-wrap: nowrap;
 }
+
 .audit-inspection .table th {
     position: relative;
     cursor: pointer;
@@ -32,9 +46,11 @@
 .audit-inspection .table th:hover .sort-arrow {
     visibility: visible;
 }
-.audit-inspection .filter-input-clear .form-control{
+
+.audit-inspection .filter-input-clear .form-control {
     width: 100px;
 }
+
 .audit-inspection .table th .filter-controls {
     margin-top: 8px;
 }
