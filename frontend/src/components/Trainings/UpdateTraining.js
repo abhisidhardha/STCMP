@@ -97,6 +97,14 @@ function UpdateTraining() {
             programCoordinator: fieldsToUpdate.programCoordinator ? selectedPC.map(pc => pc.value) : undefined
         };
 
+        // Convert necessary fields to integers
+        const integerFields = ['studentYear', 'semester', 'startYear', 'endYear', 'totalStudents', 'noOfHours', 'duration'];
+        integerFields.forEach(field => {
+            if (formData[field] !== undefined) {
+                formData[field] = parseInt(formData[field], 10);
+            }
+        });
+
         axios.put(`http://localhost:5000/trainings-api/updatetraining/${id}`, formData)
             .then(response => {
                 setResponseMessage(response.data.message);
