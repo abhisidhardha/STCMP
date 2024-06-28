@@ -13,6 +13,9 @@
 .audit-inspection tr:hover{
     background-color: rgb(139, 255, 255);
 }
+.audit-inspection .basic-multi-select{
+    max-width: 300px;
+}
 .audit-inspection  .table{
     text-wrap: nowrap;
 }

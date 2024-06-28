@@ -23,6 +23,7 @@ function AuditInspection() {
     trainerName: "",
     designation: "",
     company: "",
+    coordinators: "", 
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,12 +44,12 @@ function AuditInspection() {
     trainerName: false,
     designation: false,
     company: false,
-    coordinators: false, // Add visibility state for coordinators
+    coordinators: false, 
   });
 
   useEffect(() => {
     fetchTrainings();
-    fetchCoordinators(); // Fetch coordinators data on component mount
+    fetchCoordinators(); 
   }, []);
 
   const fetchTrainings = async () => {
@@ -68,16 +69,12 @@ function AuditInspection() {
 
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/coordinators-api/coordinators"
-      );
-      const transformedCoordinators = response.data.coordinators.map(
-        (coordinator) => ({
-          value: coordinator.id,
-          label: coordinator.name,
-        })
-      );
-      setCoordinators(transformedCoordinators);
+      const facultyResponse = await axios.get('http://localhost:5000/faculty-api/facultyList');
+                const transformedFacultyList = facultyResponse.data.faculty.map(faculty => ({
+                    label: faculty.userName,
+                    value: faculty.userId
+                }));
+      setCoordinators(transformedFacultyList);
     } catch (error) {
       console.error("Error fetching coordinators:", error);
       setError(error.message);
@@ -86,12 +83,11 @@ function AuditInspection() {
 
   const handleCoordinatorChange = (selectedOptions) => {
     setSelectedCoordinators(selectedOptions);
-    const selectedCoordinatorIds = selectedOptions.map(
-      (option) => option.value
-    );
+    const selectedCoordinatorIds = selectedOptions.map(option => option.value);
     // Update filter state with selected coordinator IDs
-    handleFilterChange("coordinators", selectedCoordinatorIds.join(","));
+    handleFilterChange('coordinators', selectedCoordinatorIds.join(','));
   };
+  
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -128,25 +124,23 @@ function AuditInspection() {
     }));
   };
 
-  const filteredTrainings = trainings.filter((training) => {
-    return Object.keys(filters).every((filterKey) => {
-      if (filterKey === "coordinators") {
-        // Handle filtering by coordinators
-        const selectedCoordinatorIds = filters.coordinators.split(",");
-        return selectedCoordinatorIds.includes(training.coordinatorId);
+  const filteredTrainings = trainings.filter(training => {
+    return Object.keys(filters).every(filterKey => {
+      if (filterKey === 'coordinators' && filters.coordinators) {
+        const selectedCoordinatorIds = filters.coordinators.split(',');
+        return selectedCoordinatorIds.some(id => training.programCoordinator.includes(id));
       }
       if (filters[filterKey]) {
         return (
           training[filterKey] &&
-          training[filterKey]
-            .toString()
-            .toLowerCase()
-            .includes(filters[filterKey].toLowerCase())
+          training[filterKey].toString().toLowerCase().includes(filters[filterKey].toLowerCase())
         );
       }
       return true;
     });
   });
+  
+  
 
   const sortedTrainings = filteredTrainings.sort((a, b) => {
     if (sortConfig.key && sortConfig.direction) {
@@ -175,7 +169,9 @@ function AuditInspection() {
   };
 
   const downloadExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(sortedTrainings);
+    const dataToExport = sortedTrainings.map(({ _id, studentsData, programCoordinator, ...rest }) => rest);
+  
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     autoFitColumns(worksheet);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Trainings");
@@ -184,10 +180,11 @@ function AuditInspection() {
       type: "buffer",
     });
   };
+  
 
   const downloadPDF = () => {
     const doc = new jsPDF("p", "pt", "a4");
-    
+
     doc.autoTable({
       head: [
         [
@@ -243,16 +240,16 @@ function AuditInspection() {
       ),
       margin: { top: 10, right: 10, bottom: 10, left: 10 }, // Reduced margins
       columnStyles: {
-        0: { cellWidth: 70 },  // Training Name
-        1: { cellWidth: 30 },  // Start Year
-        2: { cellWidth: 30 },  // End Year
-        3: { cellWidth: 35 },  // Student Year
-        4: { cellWidth: 30 },  // Semester
-        5: { cellWidth: 30 },  // Status
-        6: { cellWidth: 35 },  // Total Students
-        7: { cellWidth: 50 },  // Venue
-        8: { cellWidth: 30 },  // No of Hours
-        9: { cellWidth: 30 },  // Duration
+        0: { cellWidth: 70 }, // Training Name
+        1: { cellWidth: 30 }, // Start Year
+        2: { cellWidth: 30 }, // End Year
+        3: { cellWidth: 35 }, // Student Year
+        4: { cellWidth: 30 }, // Semester
+        5: { cellWidth: 30 }, // Status
+        6: { cellWidth: 35 }, // Total Students
+        7: { cellWidth: 50 }, // Venue
+        8: { cellWidth: 30 }, // No of Hours
+        9: { cellWidth: 30 }, // Duration
         10: { cellWidth: 30 }, // Mode
         11: { cellWidth: 30 }, // Status (duplicate, consider removing)
         12: { cellWidth: 50 }, // Trainer Name
@@ -260,7 +257,7 @@ function AuditInspection() {
         14: { cellWidth: 50 }, // Company
       },
       styles: {
-        overflow: 'linebreak',
+        overflow: "linebreak",
         cellPadding: 1,
         fontSize: 7,
       },
@@ -268,12 +265,12 @@ function AuditInspection() {
         fontSize: 7,
         fillColor: [200, 200, 200],
       },
-      pageBreak: 'auto',
-      theme: 'grid',
+      pageBreak: "auto",
+      theme: "grid",
     });
     doc.save("trainings.pdf");
   };
-  
+
   const autoFitColumns = (worksheet) => {
     const columns = [];
     const range = XLSX.utils.decode_range(worksheet["!ref"]);
@@ -297,28 +294,27 @@ function AuditInspection() {
 
   return (
     <div className="audit-inspection">
-      <div className="download-buttons">
-        <button onClick={downloadExcel} className="btn btn-success mx-2">
-          Download Excel
-        </button>
-        <button onClick={downloadPDF} className="btn btn-danger mx-2">
-          Download PDF
-        </button>
-      </div>
       <div className="filter-controls">
+        <div className="d-flex">
         <button
           onClick={() => handleFilterVisibility("coordinators")}
-          className="btn btn-primary mb-3"
-        >
+          className="btn btn-primary mb-3">
           {filterVisibility.coordinators ? "Hide Coordinators" : "Filter by Coordinators"}
         </button>
+          <button onClick={downloadExcel} className="btn btn-success mx-2 mb-3">
+              Download Excel
+            </button>
+            <button onClick={downloadPDF} className="btn btn-danger mx-2 mb-3">
+              Download PDF
+            </button>
+        </div>
         {filterVisibility.coordinators && (
           <Select
             isMulti
             value={selectedCoordinators}
             onChange={handleCoordinatorChange}
             options={coordinators}
-            className="basic-multi-select"
+            className="basic-multi-select mb-3"
             classNamePrefix="select"
           />
         )}
