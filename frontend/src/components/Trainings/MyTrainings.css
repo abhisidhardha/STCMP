@@ -1,5 +1,5 @@
 .trainings-tab{
-    background-color: #84d9fd;
+    background-color: #4bc9ff;
     background-size: cover;
     height: 100%;
 }
@@ -23,7 +23,7 @@
   transition: 0.2s ease;
 }
 .trainings-tab input:checked + .toggle{
-  background-color: #20096d;
+  background-color: #3c00ff;
 }
 .trainings-tab input:checked + .toggle::before{
   transform: translateX(20px);

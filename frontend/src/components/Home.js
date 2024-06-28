@@ -7,14 +7,22 @@ import { BsFileBarGraphFill } from "react-icons/bs";
 import Logo from '../images/vnrlogo.png';
 import { useDispatch, useSelector } from "react-redux";
 import { resetState } from "../redux/slices/userSlice";
-import { useNavigate, NavLink, Outlet } from 'react-router-dom';
+import { useNavigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 992);
   const [isSidebarModalOpen, setIsSidebarModalOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const sidebarModalRef = useRef();
+  const [trainings, setTrainings] = useState([]);
+  const [trainingSummary, setTrainingSummary] = useState({
+    totalTrainings: 0,
+    completedTrainings: 0,
+    ongoingTrainings: 0,
+    totalStudents: 0,
+  });
+
   const { currentUser } = useSelector((state) => state.userLoginReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,6 +66,34 @@ function Home() {
     }
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      axios.get(`http://localhost:5000/trainings-api/trainings/${currentUser.userId}`)
+        .then(response => {
+          setTrainings(response.data.payload);
+        })
+        .catch(error => {
+          console.error("Error fetching trainings:", error);
+        });
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (trainings.length > 0) {
+      const totalTrainings = trainings.length;
+      const completedTrainings = trainings.filter(t => t.status === 'Completed').length;
+      const ongoingTrainings = trainings.filter(t => t.status === 'Ongoing').length;
+      const totalStudents = trainings.reduce((sum, training) => sum + training.totalStudents, 0);
+
+      setTrainingSummary({
+        totalTrainings,
+        completedTrainings,
+        ongoingTrainings,
+        totalStudents,
+      });
+    }
+  }, [trainings]);
+
   return (
     <div className="home d-flex">
       {isSmallScreen && isSidebarModalOpen && <div className="sidebar-modal-backdrop" onClick={() => setIsSidebarModalOpen(false)}></div>}
@@ -65,40 +101,39 @@ function Home() {
         ref={sidebarModalRef}
         className={`sidebar d-flex flex-column ${isSmallScreen ? 'sidebar-modal' : ''} ${isSidebarModalOpen || !isSmallScreen ? 'd-block' : 'd-none'} ${isSidebarCollapsed && !isSmallScreen ? 'collapsed' : 'expanded'}`}
       >
-      <div className='header'>
-        <img src={Logo} className='vnr-logo' alt="Logo" />
-        <h1 className={`fs-3 ${isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}`}>STCMP</h1>
-      </div>
+        <div className='header'>
+          <img src={Logo} className='vnr-logo' alt="Logo" />
+          <h1 className={`fs-3 ${isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}`}>STCMP</h1>
+        </div>
         <div>
           <ul className='side-items list-unstyled'>
-          <li onClick={() => setIsSidebarCollapsed(false)}>
-  <div className="dropdown">
-    <button className="nav-link d-inline dropdown-toggle" type="button" id="trainingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-      <RiGraduationCapFill className='sidebar-icon' />
-      <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Trainings</span>
-    </button>
-    <ul className="dropdown-menu" aria-labelledby="trainingsDropdown">
-      <li>
-        <NavLink className="dropdown-item" to="/home/trainings">Trainings</NavLink>
-      </li>
-      <li>
-        <NavLink className="dropdown-item" to="/home/mytrainings">My Trainings</NavLink>
-      </li>
-    </ul>
-  </div>
-  <span className="tooltip-text">Trainings</span>
-</li>
-
+            <li onClick={() => setIsSidebarCollapsed(false)}>
+              <div className="dropdown">
+                <button className="nav-link d-inline dropdown-toggle" type="button" id="trainingsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <RiGraduationCapFill className='sidebar-icon' />
+                  <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Trainings</span>
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="trainingsDropdown">
+                  <li>
+                    <NavLink className="dropdown-item" to="/home/trainings">Trainings</NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/home/mytrainings">My Trainings</NavLink>
+                  </li>
+                </ul>
+              </div>
+              <span className="tooltip-text">Trainings</span>
+            </li>
             <li onClick={() => setIsSidebarCollapsed(false)}>
               <NavLink className="nav-link" to="/home/inspection">
-              <FaSearch className='sidebar-icon nav-link d-inline' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Audit</span><span className="tooltip-text">Audit</span>
+                <FaSearch className='sidebar-icon nav-link d-inline' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Audit</span><span className="tooltip-text">Audit</span>
               </NavLink>
-              </li>
+            </li>
             <li onClick={() => setIsSidebarCollapsed(false)}>
               <NavLink className="nav-link" to="/home/chart">
-              <BsFileBarGraphFill className='sidebar-icon d-inline' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Summary</span><span className="tooltip-text">Summary</span>
+                <BsFileBarGraphFill className='sidebar-icon d-inline' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Summary</span><span className="tooltip-text">Summary</span>
               </NavLink>
-              </li>
+            </li>
           </ul>
         </div>
       </div>
@@ -134,9 +169,22 @@ function Home() {
             </div>
           </div>
         </nav>
-        <div className='outlet-container'>
-          <Outlet />
-        </div>
+        {window.location.pathname === '/home' ? (
+          <div className="slider-container bg-info">
+            <h1 className='text-center display-5'>Welcome to Website </h1>
+            <div className="training-summary card mx-5 p-4 fs-3">
+              <h1 className=''>Your Summary</h1>
+              <p>Total Trainings: {trainingSummary.totalTrainings}</p>
+              <p>Completed Trainings: {trainingSummary.completedTrainings}</p>
+              <p>Ongoing Trainings: {trainingSummary.ongoingTrainings}</p>
+              <p>Total Students: {trainingSummary.totalStudents}</p>
+            </div>
+          </div>
+        ) : (
+          <div className='outlet-container'>
+            <Outlet />
+          </div>
+        )}
       </main>
     </div>
   );

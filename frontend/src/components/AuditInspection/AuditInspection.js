@@ -9,47 +9,16 @@ import "./AuditInspection.css";
 
 function AuditInspection() {
   const [trainings, setTrainings] = useState([]);
-  const [filters, setFilters] = useState({
-    trainingName: "",
-    startYear: "",
-    endYear: "",
-    studentYear: "",
-    semester: "",
-    totalStudents: "",
-    venue: "",
-    noOfHours: "",
-    duration: "",
-    mode: "",
-    trainerName: "",
-    designation: "",
-    company: "",
-    coordinators: "", 
-  });
+  const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [coordinators, setCoordinators] = useState([]);
   const [selectedCoordinators, setSelectedCoordinators] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
-  const [filterVisibility, setFilterVisibility] = useState({
-    trainingName: false,
-    startYear: false,
-    endYear: false,
-    studentYear: false,
-    semester: false,
-    totalStudents: false,
-    venue: false,
-    noOfHours: false,
-    duration: false,
-    mode: false,
-    trainerName: false,
-    designation: false,
-    company: false,
-    coordinators: false, 
-  });
-
+  const [visiblity,setVisibility] = useState(false)
   useEffect(() => {
     fetchTrainings();
-    fetchCoordinators(); 
+    fetchCoordinators();
   }, []);
 
   const fetchTrainings = async () => {
@@ -69,11 +38,15 @@ function AuditInspection() {
 
   const fetchCoordinators = async () => {
     try {
-      const facultyResponse = await axios.get('http://localhost:5000/faculty-api/facultyList');
-                const transformedFacultyList = facultyResponse.data.faculty.map(faculty => ({
-                    label: faculty.userName,
-                    value: faculty.userId
-                }));
+      const facultyResponse = await axios.get(
+        "http://localhost:5000/faculty-api/facultyList"
+      );
+      const transformedFacultyList = facultyResponse.data.faculty.map(
+        (faculty) => ({
+          label: faculty.userName,
+          value: faculty.userId,
+        })
+      );
       setCoordinators(transformedFacultyList);
     } catch (error) {
       console.error("Error fetching coordinators:", error);
@@ -83,11 +56,11 @@ function AuditInspection() {
 
   const handleCoordinatorChange = (selectedOptions) => {
     setSelectedCoordinators(selectedOptions);
-    const selectedCoordinatorIds = selectedOptions.map(option => option.value);
-    // Update filter state with selected coordinator IDs
-    handleFilterChange('coordinators', selectedCoordinatorIds.join(','));
+    const selectedCoordinatorIds = selectedOptions.map(
+      (option) => option.value
+    );
+    handleFilterChange("coordinators", selectedCoordinatorIds.join(","));
   };
-  
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -110,37 +83,32 @@ function AuditInspection() {
     }));
   };
 
-  const handleFilterVisibility = (key) => {
-    setFilterVisibility((prevVisibility) => ({
-      ...prevVisibility,
-      [key]: !prevVisibility[key],
-    }));
+  const handleClear = () => {
+    setSelectedCoordinators([]);
+    handleFilterChange("coordinators", "");
+    setVisibility(!visiblity);
   };
 
-  const handleClearFilter = (key) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [key]: "",
-    }));
-  };
-
-  const filteredTrainings = trainings.filter(training => {
-    return Object.keys(filters).every(filterKey => {
-      if (filterKey === 'coordinators' && filters.coordinators) {
-        const selectedCoordinatorIds = filters.coordinators.split(',');
-        return selectedCoordinatorIds.some(id => training.programCoordinator.includes(id));
+  const filteredTrainings = trainings.filter((training) => {
+    return Object.keys(filters).every((filterKey) => {
+      if (filterKey === "coordinators" && filters.coordinators) {
+        const selectedCoordinatorIds = filters.coordinators.split(",");
+        return selectedCoordinatorIds.some((id) =>
+          training.programCoordinator.includes(id)
+        );
       }
       if (filters[filterKey]) {
         return (
           training[filterKey] &&
-          training[filterKey].toString().toLowerCase().includes(filters[filterKey].toLowerCase())
+          training[filterKey]
+            .toString()
+            .toLowerCase()
+            .includes(filters[filterKey].toLowerCase())
         );
       }
       return true;
     });
   });
-  
-  
 
   const sortedTrainings = filteredTrainings.sort((a, b) => {
     if (sortConfig.key && sortConfig.direction) {
@@ -169,8 +137,10 @@ function AuditInspection() {
   };
 
   const downloadExcel = () => {
-    const dataToExport = sortedTrainings.map(({ _id, studentsData, programCoordinator, ...rest }) => rest);
-  
+    const dataToExport = sortedTrainings.map(
+      ({ _id, studentsData, programCoordinator, ...rest }) => rest
+    );
+
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
     autoFitColumns(worksheet);
     const workbook = XLSX.utils.book_new();
@@ -180,7 +150,6 @@ function AuditInspection() {
       type: "buffer",
     });
   };
-  
 
   const downloadPDF = () => {
     const doc = new jsPDF("p", "pt", "a4");
@@ -295,87 +264,82 @@ function AuditInspection() {
   return (
     <div className="audit-inspection">
       <div className="filter-controls">
-        <div className="d-flex">
-        <button
-          onClick={() => handleFilterVisibility("coordinators")}
-          className="btn btn-primary mb-3">
-          {filterVisibility.coordinators ? "Hide Coordinators" : "Filter by Coordinators"}
-        </button>
-          <button onClick={downloadExcel} className="btn btn-success mx-2 mb-3">
-              Download Excel
-            </button>
-            <button onClick={downloadPDF} className="btn btn-danger mx-2 mb-3">
-              Download PDF
-            </button>
-        </div>
-        {filterVisibility.coordinators && (
+        <div className="d-flex mb-3">
+          <button className="btn btn-primary m-2" onClick={handleClear}>
+            {visiblity ? "Show Filters" : "Hide Filters"}
+          </button>
           <Select
             isMulti
             value={selectedCoordinators}
             onChange={handleCoordinatorChange}
             options={coordinators}
-            className="basic-multi-select mb-3"
+            className={`basic-multi-select m-2 ${visiblity ? 'd-none' : ' '}`}
             classNamePrefix="select"
+            placeholder="Select Coordinators..."
           />
-        )}
+          {sortedTrainings.length > 0 && (
+            <div className="">
+              <button className="btn btn-success m-2" onClick={downloadExcel}>
+                Download Excel
+              </button>
+              <button className="btn btn-danger m-2" onClick={downloadPDF}>
+                Download PDF
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-      <table className="table table-bordered table-responsive table-hover table-striped">
-        <thead>
+      <table className="table table-responsive table-striped table-bordered table-hover">
+        <thead className="thead-dark">
           <tr>
-            {[
-              { label: "Training Name", column: "trainingName" },
-              { label: "Start Year", column: "startYear" },
-              { label: "End Year", column: "endYear" },
-              { label: "Student Year", column: "studentYear" },
-              { label: "Semester", column: "semester" },
-              { label: "Total Students", column: "totalStudents" },
-              { label: "Venue", column: "venue" },
-              { label: "No of Hours", column: "noOfHours" },
-              { label: "Duration (hours)", column: "duration" },
-              { label: "Mode", column: "mode" },
-              { label: "Status", column: "status" },
-              { label: "Trainer Name", column: "trainerName" },
-              { label: "Designation", column: "designation" },
-              { label: "Company", column: "company" },
-            ].map(({ label, column }) => (
-              <th
-                key={column}
-                className="sortable"
-                onClick={() => handleSort(column)}
-              >
-                {label}{" "}
-                <span className="sort-arrow">{getSortArrow(column)}</span>
-                <div
-                  className="filter-controls"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    onClick={() => handleFilterVisibility(column)}
-                    className="btn btn-primary mb-3"
-                  >
-                    {filterVisibility[column] ? "Hide" : "Search"}
-                  </button>
-                  {filterVisibility[column] && (
-                    <div className="filter-input-clear">
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={filters[column]}
-                        onChange={(e) =>
-                          handleFilterChange(column, e.target.value)
-                        }
-                      />
-                      <button
-                        className="btn btn-danger mx-2"
-                        onClick={() => handleClearFilter(column)}
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </th>
-            ))}
+            <th onClick={() => handleSort("trainingName")}>
+              Training Name{" "}
+              <span className="sort-arrow">{getSortArrow("trainingName")}</span>
+            </th>
+            <th onClick={() => handleSort("startYear")}>
+              Start Year <span className="sort-arrow">{getSortArrow("startYear")}</span>
+            </th>
+            <th onClick={() => handleSort("endYear")}>
+              End Year <span className="sort-arrow">{getSortArrow("endYear")}</span>
+            </th>
+            <th onClick={() => handleSort("studentYear")}>
+              Student Year{" "}
+              <span className="sort-arrow">{getSortArrow("studentYear")}</span>
+            </th>
+            <th onClick={() => handleSort("semester")}>
+              Semester <span className="sort-arrow">{getSortArrow("semester")}</span>
+            </th>
+            <th onClick={() => handleSort("totalStudents")}>
+              Total Students{" "}
+              <span className="sort-arrow">{getSortArrow("totalStudents")}</span>
+            </th>
+            <th onClick={() => handleSort("venue")}>
+              Venue <span className="sort-arrow">{getSortArrow("venue")}</span>
+            </th>
+            <th onClick={() => handleSort("noOfHours")}>
+              No of Hours{" "}
+              <span className="sort-arrow">{getSortArrow("noOfHours")}</span>
+            </th>
+            <th onClick={() => handleSort("duration")}>
+              Duration <span className="sort-arrow">{getSortArrow("duration")}</span>
+            </th>
+            <th onClick={() => handleSort("mode")}>
+              Mode <span className="sort-arrow">{getSortArrow("mode")}</span>
+            </th>
+            <th onClick={() => handleSort("status")}>
+              Status <span className="sort-arrow">{getSortArrow("status")}</span>
+            </th>
+            <th onClick={() => handleSort("trainerName")}>
+              Trainer Name{" "}
+              <span className="sort-arrow">{getSortArrow("trainerName")}</span>
+            </th>
+            <th onClick={() => handleSort("designation")}>
+              Designation{" "}
+              <span className="sort-arrow">{getSortArrow("designation")}</span>
+            </th>
+            <th onClick={() => handleSort("company")}>
+              Company <span className="sort-arrow">{getSortArrow("company")}</span>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -399,6 +363,7 @@ function AuditInspection() {
           ))}
         </tbody>
       </table>
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 }

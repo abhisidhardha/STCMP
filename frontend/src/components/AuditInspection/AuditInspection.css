@@ -4,13 +4,12 @@
     margin: 0px 20px;
 }
 
-.audit-inspection table {
+.audit-inspection table{
     border-collapse: separate;
     border-spacing: 0;
     overflow: hidden;
-    border-radius: 8px; /* Rounded corners for the table */
-    border: none; /* No visible border */
-    box-shadow: 0 0 0 1px rgb(14, 14, 14); /* Simulate border with shadow */
+    border-radius: 10px; 
+    border-bottom: 0.2px solid rgba(0, 0, 0, 0.176); 
 }
 
 .audit-inspection th, .audit-inspection td {
@@ -19,8 +18,11 @@
 
 .audit-inspection th {
     background-color: rgb(121, 217, 255);
+    border: none;
 }
-
+.audit-inspection td{
+    border-bottom: 0.2px solid rgba(0, 0, 0, 0.121);
+}
 .audit-inspection tr:hover {
     background-color: rgb(139, 255, 255);
 }

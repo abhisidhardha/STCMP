@@ -37,11 +37,13 @@
   }
 }
 
-
+.btn{
+  box-shadow: 0 0 0 1 10px black;
+}
 .sidebar {
   width: 250px;
   background: rgb(15, 26, 221);
-  background: linear-gradient(15deg, rgb(20, 30, 231) 0%, rgba(53,114,239,1) 30%, rgba(58,190,249,1) 60%, rgb(105, 213, 255) 100%);
+  background: linear-gradient(15deg, #141ee7 0%, rgba(53,114,239,1) 30%, rgba(58,190,249,1) 60%, rgb(105, 213, 255) 100%);
   color: rgb(241, 241, 241);
   align-items: center;
   padding: 1rem;
@@ -168,9 +170,21 @@
   flex-direction: column;
   flex-grow: 1;
 }
+.slider-container{
+  height: 100%;
+}
 .outlet-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: auto;
+}
+
+
+.training-summary {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+.training-summary p {
+  margin: 5px 0;
 }
