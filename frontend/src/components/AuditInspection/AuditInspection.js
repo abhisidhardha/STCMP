@@ -197,6 +197,7 @@ function AuditInspection() {
           "Student Year",
           "Semester",
           "Status",
+          "Total Students",
           "No of Hours",
           "Duration",
           "Mode",
@@ -225,7 +226,8 @@ function AuditInspection() {
           endYear,
           studentYear,
           semester,
-          status,
+          totalStudents,
+          venue,
           noOfHours,
           duration,
           mode,
@@ -234,30 +236,35 @@ function AuditInspection() {
           company,
         ]
       ),
-      margin: { top: 20, right: 20, bottom: 30, left: 20 }, // Set equal margins
+      margin: { top: 10, right: 10, bottom: 10, left: 10 }, // Reduced margins
       columnStyles: {
-        0: { cellWidth: 60 }, // Training Name
-        1: { cellWidth: 40 }, // Start Year
-        2: { cellWidth: 40 }, // End Year
-        3: { cellWidth: 40 }, // Student Year
-        4: { cellWidth: 40, overflow: 'visible' }, // Semester, no wrapping
-        5: { cellWidth: 40 }, // Status
-        6: { cellWidth: 40 }, // No of Hours
-        7: { cellWidth: 40, overflow: 'visible' }, // Duration, no wrapping
-        8: { cellWidth: 40 }, // Mode
-        9: { cellWidth: 60 }, // Trainer Name
-        10: { cellWidth: 60 }, // Designation
-        11: { cellWidth: 60 }, // Company
+        0: { cellWidth: 70 },  // Training Name
+        1: { cellWidth: 30 },  // Start Year
+        2: { cellWidth: 30 },  // End Year
+        3: { cellWidth: 35 },  // Student Year
+        4: { cellWidth: 30 },  // Semester
+        5: { cellWidth: 30 },  // Status
+        6: { cellWidth: 35 },  // Total Students
+        7: { cellWidth: 50 },  // Venue
+        8: { cellWidth: 30 },  // No of Hours
+        9: { cellWidth: 30 },  // Duration
+        10: { cellWidth: 30 }, // Mode
+        11: { cellWidth: 30 }, // Status (duplicate, consider removing)
+        12: { cellWidth: 50 }, // Trainer Name
+        13: { cellWidth: 50 }, // Designation
+        14: { cellWidth: 50 }, // Company
       },
       styles: {
-        overflow: 'linebreak', // Handle long text
-        cellPadding: 2, // Cell padding
-        fontSize: 8, // Font size
+        overflow: 'linebreak',
+        cellPadding: 1,
+        fontSize: 7,
       },
       headStyles: {
-        fontSize: 8, // Font size for header
+        fontSize: 7,
+        fillColor: [200, 200, 200],
       },
-      pageBreak: 'auto', // Handle page breaks
+      pageBreak: 'auto',
+      theme: 'grid',
     });
     doc.save("trainings.pdf");
   };
