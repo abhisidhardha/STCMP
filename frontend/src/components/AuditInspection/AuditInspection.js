@@ -197,9 +197,11 @@ function AuditInspection() {
           "Student Year",
           "Semester",
           "Status",
+          "Total Students",
           "No of Hours",
           "Duration",
           "Mode",
+          "Status",
           "Trainer Name",
           "Designation",
           "Company",
@@ -212,10 +214,12 @@ function AuditInspection() {
           endYear,
           studentYear,
           semester,
-          status,
+          totalStudents,
+          venue,
           noOfHours,
           duration,
           mode,
+          status,
           trainerName,
           designation,
           company,
@@ -225,10 +229,12 @@ function AuditInspection() {
           endYear,
           studentYear,
           semester,
-          status,
+          totalStudents,
+          venue,
           noOfHours,
           duration,
           mode,
+          status,
           trainerName,
           designation,
           company,
@@ -262,11 +268,6 @@ function AuditInspection() {
     doc.save("trainings.pdf");
   };
   
-  
-  
-  
-  
-
   const autoFitColumns = (worksheet) => {
     const columns = [];
     const range = XLSX.utils.decode_range(worksheet["!ref"]);
@@ -330,6 +331,7 @@ function AuditInspection() {
               { label: "No of Hours", column: "noOfHours" },
               { label: "Duration (hours)", column: "duration" },
               { label: "Mode", column: "mode" },
+              { label: "Status", column: "status" },
               { label: "Trainer Name", column: "trainerName" },
               { label: "Designation", column: "designation" },
               { label: "Company", column: "company" },
@@ -382,10 +384,12 @@ function AuditInspection() {
               <td>{training.endYear}</td>
               <td>{training.studentYear}</td>
               <td>{training.semester}</td>
-              <td>{training.status}</td>
+              <td>{training.totalStudents}</td>
+              <td>{training.venue}</td>
               <td>{training.noOfHours}</td>
               <td>{training.duration}</td>
               <td>{training.mode}</td>
+              <td>{training.status}</td>
               <td>{training.trainerName}</td>
               <td>{training.designation}</td>
               <td>{training.company}</td>
