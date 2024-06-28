@@ -20,7 +20,6 @@ function AuditInspection() {
     noOfHours: "",
     duration: "",
     mode: "",
-    status: "",
     trainerName: "",
     designation: "",
     company: "",
@@ -41,7 +40,6 @@ function AuditInspection() {
     noOfHours: false,
     duration: false,
     mode: false,
-    status: false,
     trainerName: false,
     designation: false,
     company: false,
@@ -188,7 +186,8 @@ function AuditInspection() {
   };
 
   const downloadPDF = () => {
-    const doc = new jsPDF("p", "pt");
+    const doc = new jsPDF("p", "pt", "a4");
+    
     doc.autoTable({
       head: [
         [
@@ -197,12 +196,10 @@ function AuditInspection() {
           "End Year",
           "Student Year",
           "Semester",
-          "Total Students",
-          "Venue",
+          "Status",
           "No of Hours",
           "Duration",
           "Mode",
-          "Status",
           "Trainer Name",
           "Designation",
           "Company",
@@ -215,41 +212,60 @@ function AuditInspection() {
           endYear,
           studentYear,
           semester,
-          totalStudents,
-          venue,
+          status,
           noOfHours,
           duration,
           mode,
-          status,
           trainerName,
           designation,
           company,
         }) => [
-          [
-            trainingName,
-            startYear,
-            endYear,
-            studentYear,
-            semester,
-            totalStudents,
-            venue,
-            noOfHours,
-            duration,
-            mode,
-            status,
-            trainerName,
-            designation,
-            company,
-          ],
+          trainingName,
+          startYear,
+          endYear,
+          studentYear,
+          semester,
+          status,
+          noOfHours,
+          duration,
+          mode,
+          trainerName,
+          designation,
+          company,
         ]
       ),
-      didParseCell: (data) => {
-        // Prevent text wrapping by setting a fixed width for each cell
-        data.cell.styles.cellWidth = "wrap";
+      margin: { top: 20, right: 20, bottom: 30, left: 20 }, // Set equal margins
+      columnStyles: {
+        0: { cellWidth: 60 }, // Training Name
+        1: { cellWidth: 40 }, // Start Year
+        2: { cellWidth: 40 }, // End Year
+        3: { cellWidth: 40 }, // Student Year
+        4: { cellWidth: 40, overflow: 'visible' }, // Semester, no wrapping
+        5: { cellWidth: 40 }, // Status
+        6: { cellWidth: 40 }, // No of Hours
+        7: { cellWidth: 40, overflow: 'visible' }, // Duration, no wrapping
+        8: { cellWidth: 40 }, // Mode
+        9: { cellWidth: 60 }, // Trainer Name
+        10: { cellWidth: 60 }, // Designation
+        11: { cellWidth: 60 }, // Company
       },
+      styles: {
+        overflow: 'linebreak', // Handle long text
+        cellPadding: 2, // Cell padding
+        fontSize: 8, // Font size
+      },
+      headStyles: {
+        fontSize: 8, // Font size for header
+      },
+      pageBreak: 'auto', // Handle page breaks
     });
     doc.save("trainings.pdf");
   };
+  
+  
+  
+  
+  
 
   const autoFitColumns = (worksheet) => {
     const columns = [];
@@ -314,7 +330,6 @@ function AuditInspection() {
               { label: "No of Hours", column: "noOfHours" },
               { label: "Duration (hours)", column: "duration" },
               { label: "Mode", column: "mode" },
-              { label: "Status", column: "status" },
               { label: "Trainer Name", column: "trainerName" },
               { label: "Designation", column: "designation" },
               { label: "Company", column: "company" },
@@ -367,12 +382,10 @@ function AuditInspection() {
               <td>{training.endYear}</td>
               <td>{training.studentYear}</td>
               <td>{training.semester}</td>
-              <td>{training.totalStudents}</td>
-              <td>{training.venue}</td>
+              <td>{training.status}</td>
               <td>{training.noOfHours}</td>
               <td>{training.duration}</td>
               <td>{training.mode}</td>
-              <td>{training.status}</td>
               <td>{training.trainerName}</td>
               <td>{training.designation}</td>
               <td>{training.company}</td>
