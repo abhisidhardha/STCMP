@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import axios from "axios";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import "./AuditInspection.css"; // Ensure you have the CSS file imported
+import "./AuditInspection.css";
 
 function AuditInspection() {
   const [trainings, setTrainings] = useState([]);
@@ -14,8 +15,8 @@ function AuditInspection() {
     endYear: "",
     studentYear: "",
     semester: "",
-    totalStudents:"",
-    venue:"",
+    totalStudents: "",
+    venue: "",
     noOfHours: "",
     duration: "",
     mode: "",
@@ -26,6 +27,8 @@ function AuditInspection() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [coordinators, setCoordinators] = useState([]);
+  const [selectedCoordinators, setSelectedCoordinators] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "" });
   const [filterVisibility, setFilterVisibility] = useState({
     trainingName: false,
@@ -33,8 +36,8 @@ function AuditInspection() {
     endYear: false,
     studentYear: false,
     semester: false,
-    totalStudents:false,
-    venue:false,
+    totalStudents: false,
+    venue: false,
     noOfHours: false,
     duration: false,
     mode: false,
@@ -42,10 +45,12 @@ function AuditInspection() {
     trainerName: false,
     designation: false,
     company: false,
+    coordinators: false, // Add visibility state for coordinators
   });
 
   useEffect(() => {
     fetchTrainings();
+    fetchCoordinators(); // Fetch coordinators data on component mount
   }, []);
 
   const fetchTrainings = async () => {
@@ -61,6 +66,33 @@ function AuditInspection() {
       setError(error.message);
       setLoading(false);
     }
+  };
+
+  const fetchCoordinators = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/coordinators-api/coordinators"
+      );
+      const transformedCoordinators = response.data.coordinators.map(
+        (coordinator) => ({
+          value: coordinator.id,
+          label: coordinator.name,
+        })
+      );
+      setCoordinators(transformedCoordinators);
+    } catch (error) {
+      console.error("Error fetching coordinators:", error);
+      setError(error.message);
+    }
+  };
+
+  const handleCoordinatorChange = (selectedOptions) => {
+    setSelectedCoordinators(selectedOptions);
+    const selectedCoordinatorIds = selectedOptions.map(
+      (option) => option.value
+    );
+    // Update filter state with selected coordinator IDs
+    handleFilterChange("coordinators", selectedCoordinatorIds.join(","));
   };
 
   const handleSort = (key) => {
@@ -100,6 +132,11 @@ function AuditInspection() {
 
   const filteredTrainings = trainings.filter((training) => {
     return Object.keys(filters).every((filterKey) => {
+      if (filterKey === "coordinators") {
+        // Handle filtering by coordinators
+        const selectedCoordinatorIds = filters.coordinators.split(",");
+        return selectedCoordinatorIds.includes(training.coordinatorId);
+      }
       if (filters[filterKey]) {
         return (
           training[filterKey] &&
@@ -245,6 +282,24 @@ function AuditInspection() {
           Download PDF
         </button>
       </div>
+      <div className="filter-controls">
+        <button
+          onClick={() => handleFilterVisibility("coordinators")}
+          className="btn btn-primary mb-3"
+        >
+          {filterVisibility.coordinators ? "Hide Coordinators" : "Filter by Coordinators"}
+        </button>
+        {filterVisibility.coordinators && (
+          <Select
+            isMulti
+            value={selectedCoordinators}
+            onChange={handleCoordinatorChange}
+            options={coordinators}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
+        )}
+      </div>
       <table className="table rounded rounded-3">
         <thead>
           <tr>
@@ -254,7 +309,7 @@ function AuditInspection() {
               { label: "End Year", column: "endYear" },
               { label: "Student Year", column: "studentYear" },
               { label: "Semester", column: "semester" },
-              { label: "Total No of Students", column: "totalStudents" },
+              { label: "Total Students", column: "totalStudents" },
               { label: "Venue", column: "venue" },
               { label: "No of Hours", column: "noOfHours" },
               { label: "Duration (hours)", column: "duration" },
