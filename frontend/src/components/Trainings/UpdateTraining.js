@@ -87,16 +87,17 @@ function UpdateTraining() {
             });
             return;
         }
-
+    
         // Prepare form data for submission
         const formData = {
             ...Object.keys(fieldsToUpdate).reduce((acc, field) => {
                 acc[field] = data[field];
                 return acc;
             }, {}),
-            programCoordinator: fieldsToUpdate.programCoordinator ? selectedPC.map(pc => pc.value) : undefined
+            programCoordinator: fieldsToUpdate.programCoordinator ? selectedPC.map(pc => pc.value) : undefined,
+            endYear: parseInt(startYear) > 0 ? parseInt(startYear) + 1 : undefined // Ensure endYear is set
         };
-
+    
         // Convert necessary fields to integers
         const integerFields = ['studentYear', 'semester', 'startYear', 'endYear', 'totalStudents', 'noOfHours', 'duration'];
         integerFields.forEach(field => {
@@ -104,7 +105,7 @@ function UpdateTraining() {
                 formData[field] = parseInt(formData[field], 10);
             }
         });
-
+    
         axios.put(`http://localhost:5000/trainings-api/updatetraining/${id}`, formData)
             .then(response => {
                 setResponseMessage(response.data.message);
@@ -120,6 +121,7 @@ function UpdateTraining() {
                 }
             });
     };
+    
 
     const handleChange = (selectedOptions) => {
         setSelectedPC(selectedOptions);
