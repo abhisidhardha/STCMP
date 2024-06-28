@@ -266,14 +266,14 @@ function AuditInspection() {
       <div className="filter-controls">
         <div className="d-flex mb-3">
           <button className="btn btn-primary m-2" onClick={handleClear}>
-            {visiblity ? "Show Filters" : "Hide Filters"}
+            {visiblity ? "Hide Filters" : "Show Filters"}
           </button>
           <Select
             isMulti
             value={selectedCoordinators}
             onChange={handleCoordinatorChange}
             options={coordinators}
-            className={`basic-multi-select m-2 ${visiblity ? 'd-none' : ' '}`}
+            className={`basic-multi-select m-2 ${visiblity ? '' : 'd-none'}`}
             classNamePrefix="select"
             placeholder="Select Coordinators..."
           />

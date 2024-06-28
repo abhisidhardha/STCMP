@@ -249,36 +249,59 @@ function AttendanceDetails() {
                       </div>
                     )}
             </div>
-            <div className="row ">
-                <div className="row navcon">
-                    <div className="col-sm-12 col-md-4 col-lg-4"><button className="btn"  onClick={updateAttendance}>
-                        Update Attendance
-                    </button></div>
-                    <div className="col-sm-12  col-md-4 col-lg-4"><button  className="btn" onClick={getAttendance}>
+            <div className="row navcon">
+                    {isCurrentUserCoordinator ? (
+                      <>
+                        <div className="col-sm-12 mb-2 col-md-4 col-lg-4">
+                          <button className="btn btn-info"  onClick={updateAttendance}>
+                            Update Attendance
+                          </button>
+                        </div>
+                        <div className="col-sm-12 mb-2 col-md-4 col-lg-4"><button  className="btn btn-info" onClick={getAttendance}>
+                          Get Attendance
+                        </button>
+                        </div>
+                        <div className="col-sm-12 mb-2 col-md-4 col-lg-4"><button className="btn btn-info" onClick={irregularS}>
+                          Irregular Students
+                          </button>
+                        </div>
+                  </>
+                    )
+                  :
+                  (
+                    <>
+                    <div className="col-sm-12 mb-2 col-md-6 col-lg-6"><button  className="btn btn-info" onClick={getAttendance}>
                         Get Attendance
-                    </button></div>
-                    <div className="col-sm-12  col-md-4 col-lg-4"><button className="btn" onClick={irregularS}>
+                      </button>
+                    </div>
+                    <div className="col-sm-12 mb-2 col-md-6 col-lg-6"><button className="btn btn-info" onClick={irregularS}>
                         Irregular Students
-                    </button></div>
-                </div>
+                      </button>
+                    </div>
+                    </>
+                  )
+                  }
             </div>
-            <div></div>
             <div className="row atd">
               {sessions.map((session, index) => (
                 <div key={index} className="session card mb-2 p-4">
                   <p>Session {index + 1}</p>
                   <p>Date: {session.date}</p>
                   <div className="row">
+                  {isCurrentUserCoordinator && (
+                    <>
                     <div className="col">
-                        <button onClick={() => getAbsentees(session.date)} className="btn">
+                        <button onClick={() => getAbsentees(session.date)} className="btn btn-primary">
                             Get Absentees to Excel
                         </button>
                     </div>
                     <div className="col">
-                        <button onClick={() => getPresentees(session.date)} className="btn">
+                        <button onClick={() => getPresentees(session.date)} className="btn btn-primary">
                             Get Presentees to Excel
                         </button>
                     </div>
+                    </>
+                  )}
                   </div>
                   
                 </div>

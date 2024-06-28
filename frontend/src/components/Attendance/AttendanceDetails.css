@@ -2,6 +2,7 @@
     height: 100%;
     width: 100%;
     padding:30px;
+    color: white;
 }
 .attendancedet .navcon{
     margin: auto;
@@ -12,38 +13,27 @@
 }
 
 .attendancedet .navcon .btn {
-    background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
     text-align: center;
-    text-transform: uppercase;
-    transition: 0.5s;
-    background-size: 200% auto;
-    color: white;            
-    box-shadow: 0 0 5px #000000;
-    border-radius: 10px;
+    box-shadow: 0 0 2px #000000;
+    color: white;
+    border-radius: 3px;
     display: block;
     margin: auto;
   }
 .attendancedet .navcon .btn:hover {
-    background-position: right center; /* change the direction of the change here */
-    color: #fff;
-    text-decoration: none;
+    scale:1.02;
+    background-color: rgb(50, 205, 205);
 }
 .attendancedet .atd{
     padding: 50px;
 }
 .atd .col{
-    background-image: linear-gradient(to right, #1FA2FF 0%, #12D8FA  51%, #1FA2FF  100%);
     margin: 10px;
     border-radius: 10px;
-    color: aliceblue;
-    transition: 0.2s ease-in-out;
-    background-size: 200% auto;
     display: block;
-    box-shadow: 0 0 1px #000000;
 }
-.atd .col:hover{
-    background-position: right center;
-    color: #fff;
+.atd .btn:hover{
+    background-color: rgb(0, 43, 215);
     text-decoration: none;
 }
 .atd h1{
