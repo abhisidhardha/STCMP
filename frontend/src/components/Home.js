@@ -126,7 +126,7 @@ function Home() {
             </li>
             <li onClick={() => setIsSidebarCollapsed(false)}>
               <NavLink className="nav-link" to="/home/inspection">
-                <FaSearch className='sidebar-icon nav-link d-inline' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}>Audit</span><span className="tooltip-text">Audit</span>
+                <FaSearch className='sidebar-icon nav-link d-inline text-nowrap' /> <span className={isSidebarCollapsed && !isSmallScreen ? 'd-none text-nowrap' : 'd-inline text-nowrap'}>Inspection</span><span className="tooltip-text">Audit</span>
               </NavLink>
             </li>
             <li onClick={() => setIsSidebarCollapsed(false)}>

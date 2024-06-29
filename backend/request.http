@@ -1,8 +1,9 @@
-POST  http://localhost:5000/faculty-api/login
+POST  http://localhost:5000/faculty-api/register
 Content-Type: application/json
 
 {
     "userId":"22071A0529",
+    "userName":"Abhi Sidhardha",
     "password":"abhi1289"
 }
 ###
