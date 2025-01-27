@@ -4,20 +4,15 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import "./CreateTrainings.css";
 import { useNavigate } from "react-router-dom";
-import Select from 'react-select';
 
 function CreateTrainings() {
     const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
-    const [formData, setFormData] = useState({ studentsData: [], attendanceRecords: [] }); // Initialize attendanceRecords as empty array
+    const [formData, setFormData] = useState({ studentsData: [], attendanceRecords: [] });
     const [facultyList, setFacultyList] = useState([]);
     const startYear = watch('startYear');
     const [responseMessage, setResponseMessage] = useState("");
-    const [selectedPC, setSelectedPC] = useState([]);
+    const [programCoordinators, setProgramCoordinators] = useState([{ value: '' }]);
     const navigate = useNavigate();
-
-    const handleChange = (selectedPC) => {
-        setSelectedPC(selectedPC);
-    };
 
     useEffect(() => {
         // Fetch faculty list from API
@@ -56,13 +51,33 @@ function CreateTrainings() {
                         const newKey = key.replace(/\s+/g, '_');
                         newObj[newKey] = obj[key];
                     });
-                    return { ...newObj, Attendance: 0, attendanceRecords: [] }; // Add attendanceRecords here
+                    return { ...newObj, Attendance: 0, attendanceRecords: [] };
                 });
 
                 setFormData(prevData => ({ ...prevData, studentsData: updatedData }));
             };
             reader.readAsArrayBuffer(file);
         }
+    };
+
+    const handleAddCoordinator = () => {
+        setProgramCoordinators([...programCoordinators, { value: '' }]);
+    };
+
+    const handleRemoveCoordinator = (index) => {
+        if (programCoordinators.length > 1) {
+            setProgramCoordinators(programCoordinators.filter((_, i) => i !== index));
+        }
+    };
+
+    const handleCoordinatorChange = (index, event) => {
+        const newCoordinators = programCoordinators.map((coordinator, i) => {
+            if (i === index) {
+                return { ...coordinator, value: event.target.value };
+            }
+            return coordinator;
+        });
+        setProgramCoordinators(newCoordinators);
     };
 
     const onSubmit = async (data) => {
@@ -75,14 +90,14 @@ function CreateTrainings() {
             totalStudents: parseInt(data.totalStudents),
             noOfHours: data.noOfHours ? parseInt(data.noOfHours) : null,
             duration: data.duration ? parseInt(data.duration) : null,
-            programCoordinator: selectedPC.map(pc => pc.value),
+            programCoordinator: programCoordinators.map(coordinator => coordinator.value),
             studentsData: formData.studentsData.map(student => ({
                 ...student,
                 Attendance: 0,
                 attendanceRecords: []
             }))
         };
-    
+
         try {
             const response = await axios.post('http://localhost:5000/trainings-api/create', transformedData);
             setResponseMessage(response.data.message);
@@ -95,7 +110,6 @@ function CreateTrainings() {
             }
         }
     };
-    
 
     return (
         <div className="create-training container">
@@ -168,19 +182,39 @@ function CreateTrainings() {
                     {errors.status?.type === 'required' && (<p className="errorMsg">*Status is required</p>)}
                 </div>
                 <div className="form-group">
-                            <label>Program Coordinators:</label>
-                            <div className="form-group">
-                                <Select options={facultyList}
-                                    onChange={handleChange}
-                                    value={selectedPC}
-                                    isMulti={true}
-                                />
-                            </div>
+                    <label>Program Coordinators:</label>
+                    {programCoordinators.map((coordinator, index) => (
+                        <div key={index} className="d-flex mb-2">
+                            <input
+                                type="text"
+                                className="form-control"
+                                value={coordinator.value}
+                                onChange={(event) => handleCoordinatorChange(index, event)}
+                                required={index === 0} // Ensure at least one text field is required
+                            />
+                            {programCoordinators.length > 1 && (
+                                <button
+                                    type="button"
+                                    className="btn btn-danger ms-2"
+                                    onClick={() => handleRemoveCoordinator(index)}
+                                >
+                                    Delete
+                                </button>
+                            )}
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={handleAddCoordinator}
+                    >
+                        Add Coordinator
+                    </button>
                 </div>
                 <div className="form-group">
                     <label htmlFor="trainerName">Trainer Name:</label>
                     <input type="text" className="form-control" id="trainerName" {...register('trainerName', { required: true })} />
-                    {errors.trainerName?.type === 'required' && (<p className="errorMsg">*Trainer Name  is required</p>)}
+                    {errors.trainerName?.type === 'required' && (<p className="errorMsg">*Trainer Name is required</p>)}
                 </div>
                 <div className="form-group">
                     <label htmlFor="designation">Designation:</label>

@@ -103,7 +103,7 @@ function Home() {
       >
         <div className='header'>
           <img src={Logo} className='vnr-logo' alt="Logo" />
-          <h1 className={`fs-3 ${isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}`}>STCMP</h1>
+          <h1 className={`fs-3 ${isSidebarCollapsed && !isSmallScreen ? 'd-none' : ''}`}>STCP</h1>
         </div>
         <div>
           <ul className='side-items list-unstyled'>

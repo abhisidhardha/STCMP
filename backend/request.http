@@ -7,6 +7,15 @@ Content-Type: application/json
     "password":"abhi1289"
 }
 ###
+POST  http://localhost:5000/faculty-api/login
+Content-Type: application/json
+
+{
+    "userId":"22071A0529",
+    "userName":"Abhi Sidhardha",
+    "password":"abhi1289"
+}
+###
 POST http://localhost:5000/trainings-api/create
 Content-Type: application/json
 

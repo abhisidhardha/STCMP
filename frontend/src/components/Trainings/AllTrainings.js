@@ -85,9 +85,6 @@ function AllTrainings() {
                     <h1 px-3>All Trainings</h1>
                 </div>
                 <div className='col text-end'>
-                    <button className="btn btn-success" onClick={() => navigate("/home/createtraining")} >
-                        Add Training
-                    </button>
                     <button className="btn btn-primary" onClick={exportToExcel}>
                         Export to Excel
                     </button>

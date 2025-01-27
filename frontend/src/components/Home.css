@@ -103,6 +103,7 @@
 
 .side-items li:hover {
   color: #ffffff;
+  border-bottom: 2px solid white;
 }
 
 
@@ -118,9 +119,10 @@
 	font-size: 1.5rem;
 }
 .side-items li {
-  margin-bottom: 15px;
+  padding-bottom: 3px;
   cursor: pointer;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .sidebar-item {
@@ -149,6 +151,7 @@
   background-color: #ffffff;
   color: #000000;
   padding: 5px;
+  z-index: 99999999;
   border-radius: 5px;
   white-space: nowrap;
 }
@@ -179,8 +182,6 @@
   flex-direction: column;
   overflow: auto;
 }
-
-
 .training-summary {
   margin-top: 20px;
   font-size: 1.2rem;
